@@ -3,4 +3,3 @@
 target
 project/*
 !project/plugins.sbt
-.scalafmt.conf

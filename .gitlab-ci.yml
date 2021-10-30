@@ -1,14 +1,4 @@
-image: openjdk:8
-
-before_script:
-  - apt-get update -y
-  - apt-get install apt-transport-https -y
-  ## Install SBT
-  - echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
-  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-  - apt-get install sbt -y
-  - sbt sbtVersion
-
+image: "hseeberger/scala-sbt:11.0.11_1.5.4_2.13.6"
 
 stages:
   - test
@@ -16,12 +6,17 @@ stages:
 
 test:
   script:
-    - sbt clean coverage test coverageReport
-
+    sbt scalafmtCheckAll coverage test coverageReport coverageAggregate
+  artifacts:
+    reports:
+      junit:
+        - ./*/target/test-reports/*.xml
+      cobertura:
+        - ./*/target/*/coverage-report/cobertura.xml
 deploy:
   script:
-    - 'printf "Manifest-Version: 1.0\nMain-Class: Main" > MANIFEST.mf'
-    - jar cfm hangman.jar MANIFEST.mf *.class
+    - sbt compile
+    - sbt package
   artifacts:
     paths:
-      - hangman.jar
+      - target/scala-2.13/*.jar
