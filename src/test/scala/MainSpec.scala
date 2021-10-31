@@ -10,13 +10,12 @@ class MainSpec extends AnyFlatSpec {
 
   "Main" should "print that game has started" in test("exit", beforeCommand(game))
 
-  it should "say whether some command is not exist" in
-    test(
-      "some command\none more\nexit",
-      beforeCommand(game) + CLI.ERROR_COMMAND + "\n" + beforeCommand(game) + CLI.ERROR_COMMAND + "\n" + beforeCommand(
-        game
-      )
+  it should "say whether some command is not exist" in test(
+    "some command\none more\nexit",
+    beforeCommand(game) + CLI.ERROR_COMMAND + "\n" + beforeCommand(game) + CLI.ERROR_COMMAND + "\n" + beforeCommand(
+      game
     )
+  )
 
   it should "guess the letter" in {
     val game1 = game.guess('h')
@@ -25,7 +24,9 @@ class MainSpec extends AnyFlatSpec {
     val game4 = game3.guess('H')
     test(
       "? h\n? H\n? l\n? H\nexit",
-      beforeCommand(game) + CLI.WRONG_COMMAND + "\n" + beforeCommand(game1) + CLI.RIGHT_COMMAND + "\n" + beforeCommand(
+      beforeCommand(game) + CLI.WRONG_COMMAND(game1.mistakes, game1.MAX_MISTAKES) + "\n" + beforeCommand(
+        game1
+      ) + CLI.RIGHT_COMMAND + "\n" + beforeCommand(
         game2
       ) + CLI.RIGHT_COMMAND + "\n" + beforeCommand(game3) + CLI.ASKED_COMMAND + "\n" + beforeCommand(game4)
     )
