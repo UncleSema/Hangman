@@ -18,6 +18,16 @@ class MainSpec extends AnyFlatSpec {
       )
     )
 
+  it should "guess the letter" in {
+    val game1 = game.guess('h')
+    val game2 = game1.guess('H')
+    val game3 = game2.guess('l')
+    test(
+      "? h\n? H\n? l\nexit",
+      beforeCommand(game) + beforeCommand(game1) + beforeCommand(game2) + beforeCommand(game3)
+    )
+  }
+
   def interact(commands: String): String = {
     val out = new ByteArrayOutputStream()
     Console.withOut(out) { Console.withIn(new StringReader(commands)) { Main.main(Array.empty) } }

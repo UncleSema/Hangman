@@ -6,7 +6,7 @@ import scala.io.StdIn
 object Main {
   def main(args: Array[String]): Unit = {
     CLI.start()
-    val game = Game.newGame("Hello")
+    var game = Game.newGame("Hello")
     while (true) {
       CLI.currentWord(game)
       CLI.guessLetter()
@@ -15,7 +15,11 @@ object Main {
         CLI.finish()
         return
       }
-      CLI.error()
+      if (str.matches("\\? \\w")) {
+        game = game.guess(str.last)
+      } else {
+        CLI.error()
+      }
     }
   }
 }
