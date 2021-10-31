@@ -1,15 +1,21 @@
 import console.CLI
+import game.Game
 
 import scala.io.StdIn
 
 object Main {
   def main(args: Array[String]): Unit = {
-    CLI.initialize()
+    CLI.start()
+    val game = Game.newGame("Hello")
     while (true) {
-      if (StdIn.readLine() == "exit") {
+      CLI.currentWord(game)
+      CLI.guessLetter()
+      val str = StdIn.readLine()
+      if (str == "exit") {
+        CLI.finish()
         return
       }
-      CLI.noSuchCommand()
+      CLI.error()
     }
   }
 }
