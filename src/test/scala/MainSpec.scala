@@ -22,9 +22,12 @@ class MainSpec extends AnyFlatSpec {
     val game1 = game.guess('h')
     val game2 = game1.guess('H')
     val game3 = game2.guess('l')
+    val game4 = game3.guess('H')
     test(
-      "? h\n? H\n? l\nexit",
-      beforeCommand(game) + beforeCommand(game1) + beforeCommand(game2) + beforeCommand(game3)
+      "? h\n? H\n? l\n? H\nexit",
+      beforeCommand(game) + CLI.WRONG_COMMAND + "\n" + beforeCommand(game1) + CLI.RIGHT_COMMAND + "\n" + beforeCommand(
+        game2
+      ) + CLI.RIGHT_COMMAND + "\n" + beforeCommand(game3) + CLI.ASKED_COMMAND + "\n" + beforeCommand(game4)
     )
   }
 

@@ -16,7 +16,12 @@ object Main {
         return
       }
       if (str.matches("\\? \\w")) {
+        val c = str.last
+        if (!game.wordContains(c)) CLI.wrong()
+        else if (!game.guessedContains(c)) CLI.right()
+        else CLI.asked()
         game = game.guess(str.last)
+
       } else {
         CLI.error()
       }
