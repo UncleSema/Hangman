@@ -1,34 +1,34 @@
 import console.CLI
 import game.{Answers, Game}
 
+import scala.annotation.tailrec
 import scala.io.StdIn
 
 object Main {
-  def main(args: Array[String]): Unit = {
-    CLI.start()
-    var game = Game.newGame(args.head)
-    while (true) {
+
+  @tailrec
+  def play(game: Game): Unit =
+    if (game.isFinished) if (game.isWin) CLI.win() else CLI.lose()
+    else {
       CLI.currentWord(game.guessed)
       CLI.guessLetter()
-      val str = StdIn.readLine()
-      if (str equals "exit") {
-        CLI.finish()
-        return
-      }
-      if (str matches "\\? \\w") {
-        val c = str.last
-        if (game.check(c) == Answers.Wrong) CLI.wrong(game.mistakes + 1, game.MAX_MISTAKES)
-        else if (game.check(c) == Answers.Right) CLI.right()
-        else CLI.asked(game.mistakes + 1, game.MAX_MISTAKES)
-        game = game.guess(str.last)
-        if (game.isFinished) {
-          if (game.isWin) CLI.win()
-          else if (game.isLose) CLI.lose()
-          return
-        }
-      } else {
-        CLI.error()
+      StdIn.readLine() match {
+        case exit if exit equals "exit" => CLI.finish()
+        case command if command matches "\\? \\w" =>
+          game.check(command.last) match {
+            case Answers.Right => CLI.right()
+            case Answers.Wrong => CLI.wrong(game.mistakes + 1, game.MAX_MISTAKES)
+            case Answers.Asked => CLI.asked(game.mistakes + 1, game.MAX_MISTAKES)
+          }
+          play(game.guess(command.last))
+        case _ =>
+          CLI.error()
+          play(game)
       }
     }
+
+  def main(args: Array[String]): Unit = {
+    CLI.start()
+    play(Game.newGame(args.head))
   }
 }
