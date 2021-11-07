@@ -1,4 +1,5 @@
 import console.CLI
+import game.Pool
 import org.scalatest.flatspec.AnyFlatSpec
 
 import java.io.{ByteArrayOutputStream, StringReader}
@@ -55,6 +56,8 @@ class MainSpec extends AnyFlatSpec {
       before("Lo*****") + CLI.WRONG(5, 5) + "\n",
     CLI.LOSE
   )
+
+  "Pool" should "get some random word" in assert(!Pool.getRandomWord.equals("Hello"))
 
   def interact(word: String, commands: String): String = {
     val out = new ByteArrayOutputStream()
